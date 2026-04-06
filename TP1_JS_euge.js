@@ -1,19 +1,3 @@
-// ===============================
-// Trabajo Práctico - TP 1 JavaScript
-// Programación III - 2026 - 1er cuatrimestre
-// Grupo: AB
-// Integrantes:
-// Eugenia Blanc
-// Alondra Nazarena Ilari
-// Jorge Larran
-// Micaela Santana
-// Alvaro Miguel Valdez
-// Agus
-// ===============================
-
-
-// Importaciones + configuración inicial
-
 const fs = require('fs').promises;
 
 const url = "https://thronesapi.com/api/v2/Characters";
