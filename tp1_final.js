@@ -2,52 +2,58 @@ import fs from "fs/promises";
 
 const url = 'https://thronesapi.com/api/v2/Characters'
 
-// Ejercicio 1 A:
+// Ejercicio 1 A: (Alondra Ilari)
 
-async function obtenerPersonajes() {
-    try{
-        const resp = await fetch(url);
-        const data = await resp.json();
-
-        console.log(data);
-        return;
-
-    } catch(error) {
-        console.error("Error", error);
+async function infoPersonajes() {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error!`);
+      }
+      const personajes = await response.json();
+      console.log(personajes);
+      return personajes;
+    
+    }catch (error) {
+        console.error('Error', error);
     }
+}   
+
+// Ejercicio 1 B: (Micaela Santana)
+
+async function crearPersonajes(personaje) {
+  try {
+    const resp = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(personaje),
+    });
+
+    if (!resp.ok) {
+      console.log("Error en POST");
+      return;
+    }
+
+    console.log("POST realizado correctamente");
+  } catch (error) {
+    console.log(`Error! ${error}`);
+  }
 }
 
-// Ejercicio 1 B:
+const p = {
+  id: 22,
+  firstName: "Micaela",
+  lastName: "Santana",
+  fullName: "Micaela Santana",
+  title: "Reina",
+  family: "Santana",
+  image: "Image",
+  imageUrl: "ImageURL"
+};
 
-async function agregar() {
-    const nuevoPersonaje = {
-        id: 53,
-        firstName: "string",
-        lastName: "string",
-        fullName: "string",
-        title: "string",
-        family: "string",
-        image: "string",
-        imageUrl: "string"
-    };
-
-    try{
-        const resp = await fetch(url, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(nuevoPersonaje)
-        });
-
-        console.log("Status", resp.status)
-
-        console.log("Personaje añadido");
-        console.log(nuevoPersonaje)
-    } catch(error) {
-        console.error("Error", error);
-    }
-}
-
-// Ejercicio 1 C:
+// Ejercicio 1 C: (Jorge Larran)
 
 async function buscar(id) {
     try{
@@ -60,9 +66,9 @@ async function buscar(id) {
     }
 }
 
-// Ejercicio 1 D:
+// Ejercicio 1 D: (Jorge Larran)
 
-async function crearArchivo() {
+async function guardarDatos() {
   try {
     const resp = await fetch(url);
     const data = await resp.json();
@@ -76,31 +82,24 @@ async function crearArchivo() {
   }
 }
 
-// Ejercicio 2 A:
+// Ejercicio 2 A: (Alvaro Valdez)
 
-async function agregarFinal() {
-
-    const  nuevo = {
-        id: 53,
-        firstName: "Nuevo Personaje",
-        lastName: "Al Final"
-    };
-
+async function agregarAlFinal() {
     try {
-        const data = JSON.parse(await fs.readFile("personajes.json"));
-
-        data.push(nuevo);
-
-        await fs.writeFile("personajes.json", JSON.stringify(data, null, 2));
-
-        console.log("Personaje agregado al final:", nuevo);
-
+        const data = await fs.readFile('personajes.json', 'utf-8');
+        const personajes = JSON.parse(data);
+        
+        const pjNuevo = { id: 999, fullName: "Juan Nieve", family: "Stark" };
+        personajes.push(pjNuevo);
+        
+        await fs.writeFile('personajes.json', JSON.stringify(personajes, null, 2));
+        console.log("Personaje agregado al final del archivo:", pjNuevo);
     } catch (error) {
-        console.error("Error", error);
+        console.error("Error al agregar al final:", error);
     }
 }
 
-// Ejercicio 2 B:
+// Ejercicio 2 B: (Jorge Larran)
 
 async function agregarInicio() {
 
@@ -121,44 +120,40 @@ async function agregarInicio() {
   }
 }
 
-// Ejercicio 2 C:
+// Ejercicio 2 C: (Damiana Sanchez)
 
-async function eliminarPrimerPj() {
+async function eliminarPrimero() {
   try {
-    const data = JSON.parse(await fs.readFile("personajes.json"));
+    const archivo = await fs.readFile("personajes.json");
+    const data = JSON.parse(archivo);
 
-    const eliminado = data.shift();
+    const elim = data.shift();
 
     await fs.writeFile("personajes.json", JSON.stringify(data, null, 2));
 
-    console.log("Eliminado:", eliminado);
-
-  } catch (error) {
-    console.error("Error", error);
+    console.log("eliminado:", elim);
+  } catch (e) {
+    console.log("error", e);
   }
 }
 
-// Ejercicio 2 D:
+// Ejercicio 2 D: (Eugenia Blanc)
 
-async function crearNuevoArchivo() {
-  try {
-    const data = JSON.parse(await fs.readFile("personajes.json"));
-
-    const reducido = data.map(p => ({
-      id: p.id,
-      nombre: p.fullName
-    }));
-
-    await fs.writeFile("personajesNombres.json", JSON.stringify(reducido, null, 2));
-
-    console.log("Archivo personajesNombres.json creado");
-
-  } catch (error) {
-    console.error("Error", error);
-  }
+async function crearArchivoIDNombres() {
+    try {
+        const personajes = JSON.parse(await fs.readFile("personajes.json"));
+        const soloNombres = personajes.map(p => ({
+            id: p.id,
+            nombre: p.fullName
+        }));
+        await fs.writeFile('personajes_nombres.json', JSON.stringify(soloNombres, null, 2), 'utf-8');
+        console.log('Archivo creado');
+    } catch (error) {
+        console.log(`Error! ${error}`);
+    }
 }
 
-// Ejercicio 2 E:
+// Ejercicio 2 E: (Jorge Larran)
 
 async function reordenar() {
   try {
@@ -177,17 +172,17 @@ async function reordenar() {
 }
 
 async function main() {
-    await obtenerPersonajes();
-    await agregar();
+    await infoPersonajes();
+    await crearPersonajes(p);
     await buscar(0);
 
-    await crearArchivo();
+    await guardarDatos();
 
-    await agregarFinal();
+    await agregarAlFinal();
     await agregarInicio();
-    await eliminarPrimerPj();
+    await eliminarPrimero();
 
-    await crearNuevoArchivo();
+    await crearArchivoIDNombres();
     await reordenar();
 }
 
